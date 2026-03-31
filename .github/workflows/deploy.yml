@@ -1,0 +1,77 @@
+name: Deploy Profile
+
+on:
+  push:
+    branches: ["master", "main"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-profile
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Prepare standalone bundle
+        run: |
+          rm -rf deploy_bundle
+          mkdir -p deploy_bundle/.next
+          cp -r .next/standalone/* deploy_bundle/
+          cp -r .next/static deploy_bundle/.next/static
+          cp -r public deploy_bundle/public
+          tar -czf release.tar.gz -C deploy_bundle .
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload release
+        run: |
+          scp -P "${{ secrets.VPS_PORT }}" release.tar.gz "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/profile-release.tar.gz"
+
+      - name: Deploy on VPS
+        run: |
+          ssh -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" '
+            set -e
+            APP_DIR="${{ secrets.VPS_APP_DIR }}"
+            RELEASE_DIR="$APP_DIR/releases/$(date +%Y%m%d%H%M%S)"
+            mkdir -p "$APP_DIR/releases"
+            mkdir -p "$RELEASE_DIR"
+            tar -xzf /tmp/profile-release.tar.gz -C "$RELEASE_DIR"
+            ln -sfn "$RELEASE_DIR" "$APP_DIR/current"
+            if [ -n "${{ secrets.APP_ENV_FILE }}" ]; then
+              printf "%s" "${{ secrets.APP_ENV_FILE }}" > "$APP_DIR/current/.env"
+            fi
+            cd "$APP_DIR/current"
+            if pm2 describe profile >/dev/null 2>&1; then
+              pm2 reload profile --update-env
+            else
+              pm2 start server.js --name profile
+            fi
+            pm2 save
+            rm -f /tmp/profile-release.tar.gz
+          '
