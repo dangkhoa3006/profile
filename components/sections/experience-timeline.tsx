@@ -16,48 +16,48 @@ export function ExperienceTimeline({
   const localizedExperiences =
     language === "vi"
       ? experiences.map((exp) => {
-          if (exp.id === "deli-group") {
-            return {
-              ...exp,
-              company: "Công ty Cổ phần Deli Group",
-              role: "Lập trình viên Fullstack",
-              description:
-                "Phát triển hệ thống vận hành xe công nghệ, tập trung vào điều phối, bản đồ và dịch vụ vận hành.",
-              achievements: [
-                "Tích hợp VietMap và Google Maps cho theo dõi vị trí, xử lý tọa độ và tương tác bản đồ.",
-                "Xây dựng API Gateway và dịch vụ backend giúp tối ưu luồng dữ liệu và giảm độ trễ.",
-                "Phát triển dashboard realtime bằng WebSocket để giám sát telemetry phương tiện.",
-              ],
-              tags: ["React.js", "Node.js", "PostgreSQL", "Redis"],
-            };
-          }
-
+        if (exp.id === "deli-group") {
           return {
             ...exp,
-            company: "Freelance / Independent Contractor",
-            role: "Kỹ sư phần mềm tự do",
+            company: "Công ty Cổ phần Deli Group",
+            role: "Lập trình viên Fullstack",
             description:
-              "Xây dựng sản phẩm số hiệu năng cao cho nhiều khách hàng tại Việt Nam và quốc tế.",
+                "Tham gia phát triển tính năng cho hệ thống vận hành, tập trung vào điều phối và bản đồ.",
             achievements: [
-              "Tối ưu hiệu năng cho các nền tảng thương mại điện tử, đạt tốc độ tải dưới 2 giây.",
-              "Triển khai SaaS boilerplate tích hợp Stripe, Auth0 và Supabase cho startup.",
-              "Tư vấn chuyển đổi hạ tầng từ VPS truyền thống sang kiến trúc cloud mở rộng.",
+                "Tích hợp VietMap và Google Maps cho theo dõi vị trí và thao tác bản đồ.",
+                "Xây dựng và cải tiến API backend phục vụ luồng dữ liệu nội bộ.",
+                "Phát triển module realtime bằng WebSocket để cập nhật trạng thái phương tiện.",
             ],
-            tags: ["Next.js", "Tailwind", "AWS", "TypeScript"],
+            tags: ["React.js", "Node.js", "PostgreSQL", "Redis"],
           };
-        })
+        }
+
+        return {
+          ...exp,
+          company: "Freelance / Independent Contractor",
+          role: "Kỹ sư phần mềm tự do",
+          description:
+                "Nhận và triển khai các hạng mục web/app theo nhu cầu của khách hàng.",
+          achievements: [
+                "Tối ưu trải nghiệm người dùng và hiệu năng frontend cho dự án thương mại điện tử.",
+                "Thiết lập bộ khung dự án để rút ngắn thời gian làm MVP.",
+                "Hỗ trợ triển khai và cấu hình hạ tầng cloud ở mức cơ bản.",
+          ],
+          tags: ["Next.js", "Tailwind", "AWS", "TypeScript"],
+        };
+      })
       : experiences;
   const localizedStats =
     language === "vi"
       ? stats.map((stat) => {
-          if (stat.id === "commits") {
-            return { ...stat, label: "Tổng số commit mã nguồn" };
-          }
-          if (stat.id === "uptime") {
-            return { ...stat, label: "Độ ổn định production" };
-          }
-          return { ...stat, label: "Số dự án đã hoàn thành", visualData: "TRẠNG_THAI: ỔN_ĐỊNH" };
-        })
+        if (stat.id === "commits") {
+          return { ...stat, label: "Tổng số commit mã nguồn" };
+        }
+        if (stat.id === "uptime") {
+          return { ...stat, label: "Độ ổn định production" };
+        }
+        return { ...stat, label: "Số dự án đã hoàn thành", visualData: "TRẠNG_THAI: ỔN_ĐỊNH" };
+      })
       : stats;
 
   return (

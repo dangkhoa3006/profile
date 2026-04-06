@@ -2,16 +2,16 @@ import type { ExperienceEntry, StatMetric } from "@/lib/types";
 
 export const experiences: ExperienceEntry[] = [
   {
-    id: "deli-Group",
+    id: "deli-group",
     company: "Deli Group",
     role: "Fullstack Developer",
     period: "05/2025 - Present",
     description:
-      "Architecting the future of logistics and delivery services through advanced mapping and real-time data synchronization.",
+      "Building and maintaining internal logistics features focused on maps, operations flow, and real-time updates.",
     achievements: [
-      "Integrated VietMap Services for high-precision real-time route optimization across 15+ logistics hubs.",
-      "Engineered complex API Gateways using GraphQL to unify internal microservices and reduce latency by 40%.",
-      "Architected a Dashboard Monitor displaying real-time vehicle telemetry data with WebSockets.",
+      "Integrated VietMap and Google Maps features for route display and location tracking.",
+      "Built and improved backend APIs for smoother data flow between services.",
+      "Developed real-time dashboard modules with WebSocket updates for vehicle status.",
     ],
     tags: ["React.js", "Node.js", "PostgreSQL", "Redis"],
     side: "right",
@@ -23,11 +23,11 @@ export const experiences: ExperienceEntry[] = [
     role: "Freelance Engineer",
     period: "2023 - 2024",
     description:
-      "Delivering high-performance digital products for international clients across Europe and SE Asia.",
+      "Built web features and small product modules for freelance clients in different domains.",
     achievements: [
-      "Performance Optimization for e-commerce platforms, achieving sub-2s load times on mobile devices.",
-      "Custom SaaS Boilerplates deployment for startups, integrating Stripe, Auth0, and Supabase.",
-      "Consulting on Cloud Migrations from legacy VPS environments to scalable AWS Lambda architectures.",
+      "Improved frontend performance and UX on e-commerce projects.",
+      "Set up reusable starter templates for startup MVPs.",
+      "Supported deployments and basic cloud migration tasks for client projects.",
     ],
     tags: ["Next.js", "Tailwind", "AWS", "TypeScript"],
     side: "left",
