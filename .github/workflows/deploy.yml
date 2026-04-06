@@ -36,8 +36,8 @@ jobs:
       - name: Prepare standalone bundle
         run: |
           rm -rf deploy_bundle
-          mkdir -p deploy_bundle/.next
-          cp -r .next/standalone/* deploy_bundle/
+          # cp -r with glob '*' skips hidden dirs like '.next', use rsync or cp -rT instead
+          rsync -a .next/standalone/ deploy_bundle/
           cp -r .next/static deploy_bundle/.next/static
           cp -r public deploy_bundle/public
           tar -czf release.tar.gz -C deploy_bundle .
