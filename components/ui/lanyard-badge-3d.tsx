@@ -413,7 +413,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
 export function LanyardBadge3D() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 13], fov: 25 }}
+      camera={{ position: [0, -1.2, 14], fov: 28 }}
       gl={{ alpha: true, antialias: true }}
       style={{ background: "transparent" }}
     >

@@ -55,8 +55,8 @@ export function Hero() {
         </div>
 
         {/* 3D Lanyard Badge */}
-        <div className="lg:col-span-5 relative">
-          <div className="w-72 h-96 md:w-96 md:h-[480px] mx-auto cursor-grab active:cursor-grabbing">
+        <div className="lg:col-span-5 relative mt-8 lg:mt-0">
+          <div className="w-full h-[460px] md:h-[580px] mx-auto cursor-grab active:cursor-grabbing">
             <LanyardBadge />
           </div>
           <p className="text-center text-outline/50 font-mono text-[10px] mt-2 uppercase tracking-widest">
