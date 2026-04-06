@@ -67,11 +67,9 @@ jobs:
               printf "%s" "${{ secrets.APP_ENV_FILE }}" > "$APP_DIR/current/.env"
             fi
             cd "$APP_DIR/current"
-            if pm2 describe profile >/dev/null 2>&1; then
-              pm2 reload profile --update-env
-            else
-              pm2 start server.js --name profile
-            fi
+            # Always delete and re-start so PM2 uses the new cwd (symlink may change)
+            pm2 delete profile 2>/dev/null || true
+            PORT=3000 HOSTNAME=0.0.0.0 pm2 start server.js --name profile
             pm2 save
             rm -f /tmp/profile-release.tar.gz
           '
