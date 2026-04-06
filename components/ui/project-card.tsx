@@ -96,14 +96,7 @@ export function ProjectCardSmall({ project }: ProjectCardProps) {
       <div className="absolute -inset-0.5 bg-linear-to-br from-secondary to-primary opacity-5 rounded-xl group-hover:opacity-20 transition duration-500" />
       <div className="relative glass-panel rounded-xl overflow-hidden flex flex-col h-full">
         <div className="p-8">
-          <div className="flex justify-between items-start mb-6">
-            {project.icon && (
-              <div className="p-3 bg-secondary/10 rounded-lg">
-                <span className="material-symbols-outlined text-secondary text-3xl">
-                  {project.icon}
-                </span>
-              </div>
-            )}
+          <div className="flex justify-end items-start mb-6">
             <span className="bg-surface-container-highest text-slate-400 px-3 py-1 rounded-md text-[10px] font-mono">
               {language === "vi" ? "DOANH NGHIỆP" : "ENTERPRISE"}
             </span>

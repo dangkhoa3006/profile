@@ -5,7 +5,7 @@ export const siteConfig = {
   title: "Profile | Nguyễn Văn Đăng Khoa",
   description:
     "Fullstack Developer specializing in scalable systems, modern web apps, and high-performance user experiences.",
-  url: "https://nvdk.dev",
+  url: "https://profile.dngkhoa.site",
 };
 
 export const navLinks: NavLink[] = [

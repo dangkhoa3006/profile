@@ -105,7 +105,10 @@ export function ExperienceTimeline({
 
         <div className="relative space-y-32">
           {/* Timeline line */}
-          <div className="absolute left-1/2 -translate-x-1/2 h-full w-[2px] timeline-line opacity-20 hidden md:block" />
+          <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-[3px] z-10 pointer-events-none block">
+            <div className="absolute inset-0 bg-primary/55 shadow-[0_0_10px_rgba(161,250,255,0.32)]" />
+            <div className="timeline-line-runner absolute left-1/2 -translate-x-1/2 top-0 h-24 w-[10px]" />
+          </div>
 
           {localizedExperiences.map((exp) => (
             <TimelineItem
