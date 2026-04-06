@@ -6,7 +6,6 @@ import { Canvas, extend, useThree, useFrame } from "@react-three/fiber";
 import {
   Environment,
   Lightformer,
-  useTexture,
 } from "@react-three/drei";
 import {
   BallCollider,
@@ -15,7 +14,9 @@ import {
   RigidBody,
   useRopeJoint,
   useSphericalJoint,
+  type RapierRigidBody,
 } from "@react-three/rapier";
+import { ThreeEvent } from "@react-three/fiber";
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
@@ -205,11 +206,13 @@ function buildCardTexture(): THREE.CanvasTexture {
 // ─────────────────────────────────────────────
 function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: number }) {
   const band = useRef<THREE.Mesh>(null!);
-  const fixed = useRef<any>(null!);
-  const j1 = useRef<any>(null!);
-  const j2 = useRef<any>(null!);
-  const j3 = useRef<any>(null!);
-  const card = useRef<any>(null!);
+  const fixed = useRef<RapierRigidBody>(null!);
+  const j1 = useRef<RapierRigidBody>(null!);
+  const j2 = useRef<RapierRigidBody>(null!);
+  const j3 = useRef<RapierRigidBody>(null!);
+  const card = useRef<RapierRigidBody>(null!);
+  
+  const lerpedPositions = useRef<WeakMap<RapierRigidBody, THREE.Vector3>>(new WeakMap());
 
   const vec = useMemo(() => new THREE.Vector3(), []);
   const ang = useMemo(() => new THREE.Vector3(), []);
@@ -225,15 +228,16 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
   };
 
   const { width, height } = useThree((state) => state.size);
-  const [curve] = useState(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-      ])
-  );
+  const [curve] = useState(() => {
+    const c = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+    ]);
+    c.curveType = "chordal";
+    return c;
+  });
   const [dragged, drag] = useState<THREE.Vector3 | false>(false);
   const [hovered, hover] = useState(false);
 
@@ -267,31 +271,38 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
 
     if (fixed.current) {
       [j1, j2].forEach((ref) => {
-        if (!ref.current.lerped)
-          ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
+        const body = ref.current;
+        if (!body) return;
+        
+        let lerped = lerpedPositions.current.get(body);
+        if (!lerped) {
+          lerped = new THREE.Vector3().copy(body.translation() as THREE.Vector3);
+          lerpedPositions.current.set(body, lerped);
+        }
+        
         const clampedDistance = Math.max(
           0.1,
-          Math.min(1, ref.current.lerped.distanceTo(ref.current.translation()))
+          Math.min(1, lerped.distanceTo(body.translation() as THREE.Vector3))
         );
-        ref.current.lerped.lerp(
-          ref.current.translation(),
+        lerped.lerp(
+          body.translation() as THREE.Vector3,
           delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
 
-      curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
-      curve.points[3].copy(fixed.current.translation());
+      curve.points[0].copy(j3.current.translation() as THREE.Vector3);
+      curve.points[1].copy(lerpedPositions.current.get(j2.current!)!);
+      curve.points[2].copy(lerpedPositions.current.get(j1.current!)!);
+      curve.points[3].copy(fixed.current.translation() as THREE.Vector3);
       (band.current.geometry as MeshLineGeometry).setPoints(curve.getPoints(32));
 
-      ang.copy(card.current.angvel());
-      rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      ang.copy(card.current.angvel() as THREE.Vector3);
+      const q = card.current.rotation();
+      rot.set(q.x, q.y, q.z);
+      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z }, true);
     }
   });
 
-  curve.curveType = "chordal";
 
   return (
     <>
@@ -323,12 +334,16 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
             position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={(e: any) => {
-              e.target.releasePointerCapture(e.pointerId);
+            onPointerUp={(e: ThreeEvent<PointerEvent>) => {
+              if (e.target && 'releasePointerCapture' in e.target) {
+                (e.target as Element).releasePointerCapture(e.pointerId);
+              }
               drag(false);
             }}
-            onPointerDown={(e: any) => {
-              e.target.setPointerCapture(e.pointerId);
+            onPointerDown={(e: ThreeEvent<PointerEvent>) => {
+              if (e.target && 'setPointerCapture' in e.target) {
+                (e.target as Element).setPointerCapture(e.pointerId);
+              }
               drag(
                 new THREE.Vector3()
                   .copy(e.point)
@@ -375,9 +390,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
 
       {/* The lanyard band */}
       <mesh ref={band}>
-        {/* @ts-ignore */}
         <meshLineGeometry />
-        {/* @ts-ignore */}
         <meshLineMaterial
           color="#a1faff"
           depthTest={false}
