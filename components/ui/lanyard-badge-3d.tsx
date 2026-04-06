@@ -228,9 +228,9 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
     });
   }, []);
 
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 0.7]);
+  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 0.7]);
+  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 0.7]);
   useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]]);
 
   useEffect(() => {
@@ -248,7 +248,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
       [card, j1, j2, j3, fixed].forEach((ref) => ref.current?.wakeUp());
       card.current?.setNextKinematicTranslation({
         x: vec.x - (dragged as THREE.Vector3).x,
-        y: vec.y - (dragged as THREE.Vector3).y,
+        y: Math.min(vec.y - (dragged as THREE.Vector3).y, 3), // limit how high it can be dragged to prevent physics exploding
         z: vec.z - (dragged as THREE.Vector3).z,
       });
     }
@@ -413,7 +413,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
 export function LanyardBadge3D() {
   return (
     <Canvas
-      camera={{ position: [0, -1.2, 14], fov: 28 }}
+      camera={{ position: [0, -1, 15], fov: 28 }}
       gl={{ alpha: true, antialias: true }}
       style={{ background: "transparent" }}
     >
