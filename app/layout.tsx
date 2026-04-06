@@ -52,10 +52,10 @@ export default async function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-background text-on-background font-body antialiased">
+      <body className="min-h-screen overflow-x-hidden flex flex-col bg-background text-on-background font-body antialiased">
         <LanguageProvider initialLanguage={initialLanguage}>
           <Navbar />
-          <main className="flex-1 pt-20">{children}</main>
+          <main className="flex-1 pt-20 pb-20 md:pb-0">{children}</main>
           <Footer />
           <MobileNav />
           <DecorativeBlobs />

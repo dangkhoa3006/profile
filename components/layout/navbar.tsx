@@ -72,10 +72,10 @@ export function Navbar() {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
-      <div className="flex justify-between items-center px-8 h-20 max-w-full">
+      <div className="flex justify-between items-center px-4 sm:px-6 lg:px-8 h-20 max-w-full gap-3">
         <Link
           href="/"
-          className="text-xl font-bold tracking-widest text-primary drop-shadow-[0_0_8px_rgba(161,250,255,0.4)] font-headline uppercase"
+          className="min-w-0 truncate text-base sm:text-lg lg:text-xl font-bold tracking-[0.2em] sm:tracking-widest text-primary drop-shadow-[0_0_8px_rgba(161,250,255,0.4)] font-headline uppercase"
         >
           {siteConfig.name}
         </Link>
@@ -98,7 +98,7 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="shrink-0 flex items-center gap-2 sm:gap-3 md:gap-4">
           <LanguageToggle />
           <button
             aria-label="Open terminal panel"

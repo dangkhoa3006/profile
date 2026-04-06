@@ -1,5 +1,4 @@
                                                                                                                                                                                                                                                                                     import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 
 type ContactPayload = {
   fullName?: string;
@@ -8,13 +7,7 @@ type ContactPayload = {
 };
 
 function missingEnv() {
-  return !(
-    process.env.SMTP_HOST &&
-    process.env.SMTP_PORT &&
-    process.env.SMTP_USER &&
-    process.env.SMTP_PASS &&
-    process.env.CONTACT_RECEIVER_EMAIL
-  );
+  return !(process.env.RESEND_API_KEY && process.env.CONTACT_RECEIVER_EMAIL);
 }
 
 export async function POST(request: Request) {
@@ -24,7 +17,7 @@ export async function POST(request: Request) {
         {
           ok: false,
           error:
-            "Missing SMTP env. Please set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_RECEIVER_EMAIL.",
+            "Missing email env. Please set RESEND_API_KEY and CONTACT_RECEIVER_EMAIL.",
         },
         { status: 500 },
       );
@@ -42,35 +35,45 @@ export async function POST(request: Request) {
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: Number(process.env.SMTP_PORT) === 465,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+    const fromEmail =
+      process.env.CONTACT_FROM_EMAIL ?? "Profile Contact <onboarding@resend.dev>";
+
+    const resendResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: [process.env.CONTACT_RECEIVER_EMAIL],
+        reply_to: email,
+        subject: `Liên hệ mới từ ${fullName}`,
+        text: `Họ tên: ${fullName}\nEmail: ${email}\n\nNội dung:\n${message}`,
+        html: `
+          <div style="font-family:Arial,sans-serif;line-height:1.6">
+            <h2>Liên hệ mới từ website Profile</h2>
+            <p><strong>Họ tên:</strong> ${fullName}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Nội dung:</strong></p>
+            <p>${message.replace(/\n/g, "<br/>")}</p>
+          </div>
+        `,
+      }),
+      signal: AbortSignal.timeout(10000),
     });
 
-    await transporter.sendMail({
-      from: `"Profile Contact" <${process.env.SMTP_USER}>`,
-      to: process.env.CONTACT_RECEIVER_EMAIL,
-      replyTo: email,
-      subject: `Liên hệ mới từ ${fullName}`,
-      text: `Họ tên: ${fullName}\nEmail: ${email}\n\nNội dung:\n${message}`,
-      html: `
-        <div style="font-family:Arial,sans-serif;line-height:1.6">
-          <h2>Liên hệ mới từ website Profile</h2>
-          <p><strong>Họ tên:</strong> ${fullName}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Nội dung:</strong></p>
-          <p>${message.replace(/\n/g, "<br/>")}</p>
-        </div>
-      `,
-    });
+    if (!resendResponse.ok) {
+      const detail = await resendResponse.text();
+      return NextResponse.json(
+        { ok: false, error: "Failed to send email via Resend.", detail },
+        { status: 502 },
+      );
+    }
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    console.error("Contact API error:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to send email." },
       { status: 500 },

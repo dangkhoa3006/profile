@@ -28,15 +28,15 @@ export function ProfileContent() {
   const { language } = useLanguage();
 
   return (
-    <main className="px-6 py-16 md:py-24 animate-fade-in">
+    <main className="px-4 sm:px-6 py-12 md:py-24 animate-fade-in">
       <div className="max-w-6xl mx-auto space-y-8">
-        <section className="glass-panel p-8 rounded-xl border border-primary/20">
+        <section className="glass-panel p-5 sm:p-8 rounded-xl border border-primary/20">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
             <div className="space-y-3">
               <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
                 {language === "vi" ? "Hồ sơ" : "Profile"}
               </p>
-              <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">
+              <h1 className="font-headline text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight">
                 NGUYỄN VĂN ĐĂNG KHOA
               </h1>
               <p className="text-secondary font-mono uppercase tracking-wider text-sm">
@@ -52,7 +52,7 @@ export function ProfileContent() {
               </a>
               <a
                 href="mailto:dngkhoa.dev@gmail.com"
-                className="glass-panel px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors"
+                className="glass-panel px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors break-all"
               >
                 dngkhoa.dev@gmail.com
               </a>
@@ -65,7 +65,7 @@ export function ProfileContent() {
                 href="https://github.com/dangkhoa3006"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass-panel px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors"
+                className="glass-panel px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors break-all"
               >
                 github.com/dangkhoa3006
               </Link>
@@ -73,7 +73,7 @@ export function ProfileContent() {
                 href="https://www.linkedin.com/in/khoa-nguy%E1%BB%85n-v%C4%83n-%C4%91%C4%83ng-212545226/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass-panel px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors sm:col-span-2"
+                className="glass-panel px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors sm:col-span-2 wrap-break-word"
               >
                 linkedin.com/in/khoa-nguyen-van-dang-212545226
               </Link>
@@ -82,7 +82,7 @@ export function ProfileContent() {
         </section>
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="glass-panel p-8 rounded-xl space-y-4">
+          <div className="glass-panel p-5 sm:p-8 rounded-xl space-y-4">
             <h2 className="font-headline text-2xl font-bold text-primary">
               {language === "vi" ? "Mục tiêu nghề nghiệp" : "Career Objectives"}
             </h2>
@@ -104,7 +104,7 @@ export function ProfileContent() {
             </p>
           </div>
 
-          <div className="glass-panel p-8 rounded-xl space-y-4">
+          <div className="glass-panel p-5 sm:p-8 rounded-xl space-y-4">
             <h2 className="font-headline text-2xl font-bold text-primary">
               {language === "vi" ? "Học vấn và ngôn ngữ" : "Education & Language"}
             </h2>
@@ -127,7 +127,7 @@ export function ProfileContent() {
           </div>
         </section>
 
-        <section className="glass-panel p-8 rounded-xl space-y-5">
+        <section className="glass-panel p-5 sm:p-8 rounded-xl space-y-5">
           <h2 className="font-headline text-2xl font-bold text-primary">
             {language === "vi" ? "Kỹ năng" : "Skills"}
           </h2>
@@ -143,7 +143,7 @@ export function ProfileContent() {
           </div>
         </section>
 
-        <section className="glass-panel p-8 rounded-xl space-y-6 featured-card">
+        <section className="glass-panel p-5 sm:p-8 rounded-xl space-y-6 featured-card">
           <div className="space-y-2">
             <h2 className="font-headline text-2xl font-bold text-primary">
               {language === "vi"

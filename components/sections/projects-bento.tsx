@@ -60,7 +60,7 @@ export function ProjectsBento({ variant = "summary" }: ProjectsBentoProps) {
   const wideProjects = localizedProjects.filter((p) => p.layout === "wide");
 
   return (
-    <section className="py-32 px-6 animate-fade-in-delay-2" id="projects">
+    <section className="py-16 md:py-24 lg:py-32 px-4 sm:px-6 animate-fade-in-delay-2" id="projects">
       <div className="max-w-7xl mx-auto">
         {variant === "summary" ? (
           <SectionHeader
@@ -71,10 +71,10 @@ export function ProjectsBento({ variant = "summary" }: ProjectsBentoProps) {
           />
         ) : (
           <header className="mb-12">
-            <h1 className="font-headline text-5xl font-bold tracking-tighter text-glow-primary mb-4 uppercase">
+            <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight md:tracking-tighter text-glow-primary mb-4 uppercase">
               {language === "vi" ? "Dự Án Nổi Bật" : "Selected Projects"}
             </h1>
-            <p className="text-on-surface-variant max-w-2xl text-lg">
+            <p className="text-on-surface-variant max-w-2xl text-base md:text-lg">
               {language === "vi"
                 ? "Danh sách dự án tiêu biểu, tập trung vào hệ thống hiệu năng cao và bảo mật định danh."
                 : "A curated selection of architectural implementations, focus on high-concurrency systems and secure identity management."}

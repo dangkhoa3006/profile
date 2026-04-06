@@ -17,9 +17,11 @@ export const navLinks: NavLink[] = [
 ];
 
 export const mobileNavLinks: NavLink[] = [
+  { label: "Profile", href: "/profile", icon: "account_circle" },
   { label: "Work", href: "/projects", icon: "code" },
   { label: "Tech", href: "/stack", icon: "layers" },
-  { label: "Profile", href: "/profile", icon: "account_circle" },
+  { label: "Exp", href: "/experience", icon: "work_history" },
+  { label: "Contact", href: "/#contact", icon: "mail" },
 ];
 
 export const socialLinks: SocialLink[] = [
