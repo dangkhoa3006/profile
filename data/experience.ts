@@ -2,7 +2,7 @@ import type { ExperienceEntry, StatMetric } from "@/lib/types";
 
 export const experiences: ExperienceEntry[] = [
   {
-    id: "deli-group",
+    id: "deli-Group",
     company: "Deli Group",
     role: "Fullstack Developer",
     period: "05/2025 - Present",
