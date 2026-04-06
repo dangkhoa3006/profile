@@ -91,13 +91,7 @@ function buildCardTexture(): THREE.CanvasTexture {
   ctx.arc(W / 2, 190, 72, 0, Math.PI * 2);
   ctx.fill();
 
-  // Avatar initials fallback
-  ctx.font = "bold 52px 'Courier New', monospace";
-  ctx.fillStyle = "rgba(161,250,255,0.6)";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("DK", W / 2, 190);
-  ctx.textBaseline = "alphabetic";
+
 
   // Name
   ctx.font = "bold 34px 'Courier New', monospace";
@@ -224,6 +218,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
 
   // Canvas texture for the card front
   const cardTexture = useMemo(() => buildCardTexture(), []);
+  
+  // Load avatar image asynchronously
+  const [avtTexture, setAvtTexture] = useState<THREE.Texture | null>(null);
+  useEffect(() => {
+    new THREE.TextureLoader().load("/img/avt.jpg", (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      setAvtTexture(tex);
+    });
+  }, []);
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
@@ -369,6 +372,14 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: { maxSpeed?: number; minSpeed?: 
                 metalness={0.1}
               />
             </mesh>
+
+            {/* Avatar image overlaid on the ring */}
+            {avtTexture && (
+              <mesh position={[0, 0.53125, 0.015]}>
+                <circleGeometry args={[0.225, 32]} />
+                <meshBasicMaterial map={avtTexture} />
+              </mesh>
+            )}
 
             {/* Metallic clip at top */}
             <mesh position={[0, 1.125, 0.02]}>
